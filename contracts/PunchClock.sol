@@ -160,7 +160,11 @@ contract PunchClock {
         lastCard.timeOut = outTime;
     }
 
+    // TODO: batch adding
+    // function addAdmins(address[] admins) onlyOwner
+    // function addMembers(address[] members) onlyAdmins
+
     // TODO: batch punching
-    //  function batchPunchIn(mapping(address => uint) memberToTimeIn) onlyAdmins
-    //  function batchPunchOut(mapping(address => uint) memberToTimeOut) onlyAdmins
+    //  function batchPunchIn(address[] members,  uint[] inTimes) onlyAdmins
+    //  function batchPunchOut(address[] members,  uint[] outTimes) onlyAdmins
 }
