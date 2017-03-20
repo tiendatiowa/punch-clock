@@ -160,6 +160,12 @@ contract PunchClock {
         lastCard.timeOut = outTime;
     }
 
+    // TODO: getOwner() method
+    // TODO: destroy() method
+
+    // TODO: remove people
+    // TODO: publish events
+
     // TODO: batch adding
     // function addAdmins(address[] admins) onlyOwner
     // function addMembers(address[] members) onlyAdmins
