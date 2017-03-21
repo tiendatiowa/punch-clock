@@ -54,22 +54,69 @@ contract('PunchClock', function(accounts) {
         assert.equal(members.length, 3, "There should still be only three members");
     })
   });
-  /*
   it("punch in the second account", function() {
       var pc;
+      var ts = 1490196677; 
       return PunchClock.deployed().then(function(instance) {
           pc = instance;
-          var ts = Math.round((new Date()).getTime() / 1000);
-          return pc.punchIn(accounts[1], ts);
-      }).then(function(cards) {
-          //return pc.getPunchCardsOf(accounts[1]);
-          console.log(cards);
-          return pc.punchClock
+          pc.punchIn(accounts[1], ts);
+      }).then(function() {
+          return pc.getPunchCardsOf(accounts[1]);
       }).then(function(punchCards) {
-          var tmp = punchCards[accounts[1]];
-          console.log(tmp.length);
-          //assert.equal(punchCards.length, 1, "There should be one punch card for the second account");
+          assert.equal(punchCards.length, 1, "There should be one punch card for the second account");
+          return punchCards[0];
+      }).then(function(card) {
+          assert.equal(card[0], ts, "Time in should be correct");
+          assert.equal(card[1], 0, "Time out should be zero");
       })
   });
-  */
+  it("punch in the second account again will only change the in time", function() {
+      var pc;
+      var ts = 1490196678; 
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+          pc.punchIn(accounts[1], ts);
+      }).then(function() {
+          return pc.getPunchCardsOf(accounts[1]);
+      }).then(function(punchCards) {
+          assert.equal(punchCards.length, 1, "There should be one punch card for the second account");
+          return punchCards[0];
+      }).then(function(card) {
+          assert.equal(card[0], ts, "Time in should be correct");
+          assert.equal(card[1], 0, "Time out should be zero");
+      })
+  });
+  it("punch out the second account", function() {
+      var pc;
+      var ts = 1490196680; 
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+          pc.punchOut(accounts[1], ts);
+      }).then(function() {
+          return pc.getPunchCardsOf(accounts[1]);
+      }).then(function(punchCards) {
+          assert.equal(punchCards.length, 1, "There should be one punch card for the second account");
+          return punchCards[0];
+      }).then(function(card) {
+          assert.equal(card[1], ts, "Time out should be correct");
+      })
+  });
+  it("punch in and out the second account two more times", function() {
+      var pc;
+      var ts = 1490196682; 
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+          pc.punchIn(accounts[1], ts);
+      }).then(function() {
+          pc.punchOut(accounts[1], ts);
+      }).then(function() {
+          pc.punchIn(accounts[1], ts);
+      }).then(function() {
+          pc.punchOut(accounts[1], ts);
+      }).then(function() {
+          return pc.getPunchCardsOf(accounts[1]);
+      }).then(function(punchCards) {
+          assert.equal(punchCards.length, 3, "There should be three punch cards for the second account");
+      })
+  });
 });

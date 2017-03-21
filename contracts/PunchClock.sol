@@ -26,8 +26,7 @@ contract PunchClock {
     uint totalNumberOfMembers;
 
     // All punch cards of all members
-    // Note: make this public for testing purpose
-    mapping(address => PunchCard[]) public punchClock;
+    mapping(address => PunchCard[]) punchClock;
 
     // Constructor, create a new punch clock and assign the creator as the owner of the punch clock
     function PunchClock() {
@@ -127,31 +126,26 @@ contract PunchClock {
         return punchCards[punchCards.length - 1];
     }
 
-    // Add a new punch card into an array of cards
-    function getNewCardInternal(uint inTime) internal returns(PunchCard) {
-        PunchCard({
-            timeIn: inTime,
-            timeOut: 0
-        });
-    }
-
     // Register an in time for a member. Only admins can perform this task.
     function punchIn(address member, uint inTime) onlyAdmins {
         // If the member does not exist, throw
         if (members[member] == false) throw;
 
         var allCards = punchClock[member];
-        if (allCards.length == 0) {
-            allCards.push(getNewCardInternal(inTime));
-        } else {
+        if (allCards.length > 0) {
             var lastCard = getLast(allCards);
             if (lastCard.timeOut == 0) {
-                // If there's an incomplete card, just update the in time of this card
-                lastCard.timeIn = inTime;
-            } else {
-                allCards.push(getNewCardInternal(inTime));
+                // remove the last card if it's incomplete. We'll replace it with a new one.
+                punchClock[member].length = punchClock[member].length - 1;
             }
         }
+
+        punchClock[member].push(
+            PunchCard({
+            timeIn: inTime,
+            timeOut: 0
+        })
+        );
     }
 
     // Register an out time for a member. Only admins can perform this task.
@@ -163,10 +157,17 @@ contract PunchClock {
         if (allCards.length == 0) throw;
         var lastCard = getLast(allCards);
         if (lastCard.timeOut != 0) throw;
-        lastCard.timeOut = outTime;
+        // Remove the last card and replace it with a new one
+        punchClock[member].length = punchClock[member].length - 1;
+        //lastCard.timeOut = outTime;
+        punchClock[member].push(
+            PunchCard({
+            timeIn: lastCard.timeIn,
+            timeOut: outTime
+        })
+        );
     }
 
-    // TODO: getOwner() method
     // TODO: destroy() method
 
     // TODO: remove people
