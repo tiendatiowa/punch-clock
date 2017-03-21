@@ -26,7 +26,8 @@ contract PunchClock {
     uint totalNumberOfMembers;
 
     // All punch cards of all members
-    mapping(address => PunchCard[]) punchClock;
+    // Note: make this public for testing purpose
+    mapping(address => PunchCard[]) public punchClock;
 
     // Constructor, create a new punch clock and assign the creator as the owner of the punch clock
     function PunchClock() {
@@ -79,7 +80,7 @@ contract PunchClock {
     }
 
     // Return all punch cards of a member
-    function getPunchCardsInternal(address member) internal returns(uint[2][]) {
+    function getPunchCardsInternal(address member) constant internal returns(uint[2][]) {
         var allCards = punchClock[member];
         uint[2][] memory tmp = new uint[2][](allCards.length);
         for (uint i = 0; i < allCards.length; i++) {
@@ -90,12 +91,12 @@ contract PunchClock {
 
     // Return all punch cards of the requestor. Only member can perform this task
     function getMyPunchCards() onlyMembers constant returns(uint[2][] punchCards) {
-        getPunchCardsInternal(msg.sender);
+        return getPunchCardsInternal(msg.sender);
     }
 
     // Return all punch cards of a member. Only admin can perform this task
     function getPunchCardsOf(address member) onlyAdmins constant returns(uint[2][] punchcards) {
-        getPunchCardsInternal(member);
+        return getPunchCardsInternal(member);
     }
 
     // Return all members in the contract. Only admins can perform this task.
@@ -116,8 +117,13 @@ contract PunchClock {
         return allAdmins;
     }
 
+    // Return the owner of the contract. Anyone can perform this task.
+    function getOwner() constant returns(address) {
+        return owner;
+    }
+
     // Helper function to get the last element in an array
-    function getLast(PunchCard[] punchCards) internal returns(PunchCard) {
+    function getLast(PunchCard[] punchCards) constant internal returns(PunchCard) {
         return punchCards[punchCards.length - 1];
     }
 
