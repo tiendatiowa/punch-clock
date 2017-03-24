@@ -168,7 +168,10 @@ contract PunchClock {
         );
     }
 
-    // TODO: destroy() method
+    // Kill the contract
+    function destroy() onlyOwner {
+        suicide(owner);
+    }
 
     // TODO: remove people
     // TODO: publish events

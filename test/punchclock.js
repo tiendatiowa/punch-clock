@@ -119,4 +119,18 @@ contract('PunchClock', function(accounts) {
           assert.equal(punchCards.length, 3, "There should be three punch cards for the second account");
       })
   });
+  it("destroy() should kill the contract", function(){
+      var pc;
+      return PunchClock.new().then(function(instance) {
+          pc = instance;
+          return pc.getOwner();
+      }).then(function(owner) {
+          assert.equal(owner, accounts[0], "the owner should be the first account");
+          pc.destroy();
+      }).then(function() {
+          return pc.getOwner();
+      }).then(function(owner) {
+          assert.equal(owner, "0x", "the owner should be cleared");
+      })
+  });
 });
