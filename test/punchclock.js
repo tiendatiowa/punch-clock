@@ -119,6 +119,30 @@ contract('PunchClock', function(accounts) {
           assert.equal(punchCards.length, 3, "There should be three punch cards for the second account");
       })
   });
+  it("remove the second account", function() {
+      var pc;
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+      }).then(function() {
+          pc.removeAdmin(accounts[1]);
+      }).then(function() {
+          return pc.isAdmin(accounts[1]);
+      }).then(function(isAdmin) {
+          assert.equal(isAdmin, false, "The second account must not be an admin anymore");
+      })
+  });
+  it("remove the third account", function() {
+      var pc;
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+      }).then(function() {
+          pc.removeMember(accounts[2]);
+      }).then(function() {
+          return pc.isMember(accounts[2]);
+      }).then(function(isMember) {
+          assert.equal(isMember, false, "The third account must not be a member anymore");
+      })
+  });
   it("destroy() should kill the contract", function(){
       var pc;
       return PunchClock.new().then(function(instance) {

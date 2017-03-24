@@ -168,12 +168,37 @@ contract PunchClock {
         );
     }
 
+    // Remove an admin. Only owner can perform this task.
+    function removeAdmin(address admin) onlyOwner {
+        if (admins[admin] == true) {
+            admins[admin] = false;
+            members[admin] = false;
+        }
+    }
+
+    // Remove a member. Only admin can perform this task.
+    function removeMember(address member) onlyAdmins {
+        if (members[member] == true) {
+            members[member] = false;
+        }
+    }
+
+    // Check if a certain person is a member
+    function isMember(address person) constant returns(bool) {
+        return members[person];
+    }
+
+    // Check if a certain person is an admin
+    function isAdmin(address person) constant returns(bool) {
+        return admins[person];
+    }
+
     // Kill the contract
     function destroy() onlyOwner {
         suicide(owner);
     }
 
-    // TODO: remove people
+    // TODO: change owner
     // TODO: publish events
 
     // TODO: batch adding
