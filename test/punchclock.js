@@ -143,6 +143,20 @@ contract('PunchClock', function(accounts) {
           assert.equal(isMember, false, "The third account must not be a member anymore");
       })
   });
+  it("change owner", function(){
+      var pc;
+      return PunchClock.new().then(function(instance) {
+          pc = instance;
+          return pc.getOwner();
+      }).then(function(owner) {
+          assert.equal(owner, accounts[0], "the owner should be the first account");
+          pc.changeOwner(accounts[1]);
+      }).then(function() {
+          return pc.getOwner();
+      }).then(function(owner) {
+          assert.equal(owner, accounts[1], "the owner should be the second account");
+      })
+  });
   it("destroy() should kill the contract", function(){
       var pc;
       return PunchClock.new().then(function(instance) {

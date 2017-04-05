@@ -193,6 +193,11 @@ contract PunchClock {
         return admins[person];
     }
 
+    // Change the owner to another person. Only owner can perform this task.
+    function changeOwner(address newOwner) onlyOwner {
+        owner = newOwner;
+    }
+
     // Kill the contract
     function destroy() onlyOwner {
         suicide(owner);
