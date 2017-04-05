@@ -2,6 +2,13 @@
 
 Punch clock ("Chấm công" in Vietnamese) is a simple smart contract to keep track of people in and out time.
 
+The contract has all of the basic functionalities:
+* Add/remove admins
+* Add/remove members
+* Change owner
+* Punch in/out a member, and get all punch cards of a member
+* Destroy the contract when not needed anymore
+
 # Usage and cost estimates 
 
 (Note: gas price = 0.00000002 Ether, 1 ETH = $40 in these calculations)
