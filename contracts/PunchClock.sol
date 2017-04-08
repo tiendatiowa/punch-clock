@@ -6,8 +6,8 @@ contract PunchClock {
 
     // The data structure to store the time in and out of a person
     struct PunchCard {
-        uint timeIn; // time the person gets in, unix timestamp
-        uint timeOut; // time the person gets out, unix timestamp
+        uint64 timeIn; // time the person gets in, unix timestamp
+        uint64 timeOut; // time the person gets out, unix timestamp
     }
 
     // The list of all admins. The reason for having these two mapping is that
@@ -17,13 +17,13 @@ contract PunchClock {
     // possible to iterate through a mapping, so the workaround is to keep track
     // of the size manually.
     mapping(address => bool) admins;
-    mapping(uint => address) adminsByIndex;
-    uint totalNumberOfAdmins;
+    mapping(uint64 => address) adminsByIndex;
+    uint64 totalNumberOfAdmins;
 
     // The list of all members.
     mapping(address => bool) members;
-    mapping(uint => address) membersByIndex;
-    uint totalNumberOfMembers;
+    mapping(uint64 => address) membersByIndex;
+    uint64 totalNumberOfMembers;
 
     // All punch cards of all members
     mapping(address => PunchCard[]) punchClock;
@@ -79,29 +79,29 @@ contract PunchClock {
     }
 
     // Return all punch cards of a member
-    function getPunchCardsInternal(address member) constant internal returns(uint[2][]) {
+    function getPunchCardsInternal(address member) constant internal returns(uint64[2][]) {
         var allCards = punchClock[member];
-        uint[2][] memory tmp = new uint[2][](allCards.length);
-        for (uint i = 0; i < allCards.length; i++) {
+        uint64[2][] memory tmp = new uint64[2][](allCards.length);
+        for (uint64 i = 0; i < allCards.length; i++) {
             tmp[i] = [allCards[i].timeIn, allCards[i].timeOut];
         }
         return tmp;
     }
 
     // Return all punch cards of the requestor. Only member can perform this task
-    function getMyPunchCards() onlyMembers constant returns(uint[2][] punchCards) {
+    function getMyPunchCards() onlyMembers constant returns(uint64[2][] punchCards) {
         return getPunchCardsInternal(msg.sender);
     }
 
     // Return all punch cards of a member. Only admin can perform this task
-    function getPunchCardsOf(address member) onlyAdmins constant returns(uint[2][] punchcards) {
+    function getPunchCardsOf(address member) onlyAdmins constant returns(uint64[2][] punchcards) {
         return getPunchCardsInternal(member);
     }
 
     // Return all members in the contract. Only admins can perform this task.
     function getAllMembers() onlyAdmins constant returns(address[]) {
         address[] memory allMembers = new address[](totalNumberOfMembers);
-        for (uint i = 0; i < totalNumberOfMembers; i++) {
+        for (uint64 i = 0; i < totalNumberOfMembers; i++) {
             allMembers[i] = membersByIndex[i];
         }
         return allMembers;
@@ -110,7 +110,7 @@ contract PunchClock {
     // Return all admins in the contract. Only owner can perform this task.
     function getAllAdmins() onlyOwner constant returns(address[]) {
         address[] memory allAdmins = new address[](totalNumberOfAdmins);
-        for (uint i = 0; i < totalNumberOfAdmins; i++) {
+        for (uint64 i = 0; i < totalNumberOfAdmins; i++) {
             allAdmins[i] = adminsByIndex[i];
         }
         return allAdmins;
@@ -127,7 +127,7 @@ contract PunchClock {
     }
 
     // Register an in time for a member. Only admins can perform this task.
-    function punchIn(address member, uint inTime) onlyAdmins {
+    function punchIn(address member, uint64 inTime) onlyAdmins {
         // If the member does not exist, throw
         if (members[member] == false) throw;
 
@@ -149,7 +149,7 @@ contract PunchClock {
     }
 
     // Register an out time for a member. Only admins can perform this task.
-    function punchOut(address member, uint outTime) onlyAdmins {
+    function punchOut(address member, uint64 outTime) onlyAdmins {
         // If the member does not exist, throw
         if (members[member] == false) throw;
 
@@ -203,7 +203,6 @@ contract PunchClock {
         suicide(owner);
     }
 
-    // TODO: change owner
     // TODO: publish events
 
     // TODO: batch adding
@@ -211,6 +210,6 @@ contract PunchClock {
     // function addMembers(address[] members) onlyAdmins
 
     // TODO: batch punching
-    //  function batchPunchIn(address[] members,  uint[] inTimes) onlyAdmins
-    //  function batchPunchOut(address[] members,  uint[] outTimes) onlyAdmins
+    //  function batchPunchIn(address[] members,  uint64[] inTimes) onlyAdmins
+    //  function batchPunchOut(address[] members,  uint64[] outTimes) onlyAdmins
 }
