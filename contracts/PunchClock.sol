@@ -27,6 +27,15 @@ contract PunchClock {
 
     // All punch cards of all members
     mapping(address => PunchCard[]) punchClock;
+    
+    // events
+    event AdminAdded(address indexed admin);
+    event MemberAdded(address indexed member);
+    event AdminRemoved(address indexed admin);
+    event MemberRemoved(address indexed member);
+    event PunchedIn(address indexed member, uint64 inTime);
+    event PunchedOut(address indexed member, uint64 outTime);
+    event OwnerChanged(address indexed oldOwner, address indexed newOwner);
 
     // Constructor, create a new punch clock and assign the creator as the owner of the punch clock
     function PunchClock() {
@@ -70,12 +79,14 @@ contract PunchClock {
             totalNumberOfAdmins++;
 
             addMemberInternal(admin);
+            AdminAdded(admin);
         }
     }
 
     // Add a new member to the list of member. Only admins can perform this task
     function addMember(address member) onlyAdmins {
         addMemberInternal(member);
+        MemberAdded(member);
     }
 
     // Return all punch cards of a member
@@ -142,10 +153,11 @@ contract PunchClock {
 
         punchClock[member].push(
             PunchCard({
-            timeIn: inTime,
-            timeOut: 0
-        })
+                timeIn: inTime,
+                timeOut: 0
+            })
         );
+        PunchedIn(member, inTime);
     }
 
     // Register an out time for a member. Only admins can perform this task.
@@ -159,13 +171,13 @@ contract PunchClock {
         if (lastCard.timeOut != 0) throw;
         // Remove the last card and replace it with a new one
         punchClock[member].length = punchClock[member].length - 1;
-        //lastCard.timeOut = outTime;
         punchClock[member].push(
             PunchCard({
-            timeIn: lastCard.timeIn,
-            timeOut: outTime
-        })
+                timeIn: lastCard.timeIn,
+                timeOut: outTime
+            })
         );
+        PunchedOut(member, outTime);
     }
 
     // Remove an admin. Only owner can perform this task.
@@ -174,6 +186,7 @@ contract PunchClock {
             admins[admin] = false;
             members[admin] = false;
         }
+        AdminRemoved(admin);
     }
 
     // Remove a member. Only admin can perform this task.
@@ -181,6 +194,7 @@ contract PunchClock {
         if (members[member] == true) {
             members[member] = false;
         }
+        MemberRemoved(member);
     }
 
     // Check if a certain person is a member
@@ -195,15 +209,15 @@ contract PunchClock {
 
     // Change the owner to another person. Only owner can perform this task.
     function changeOwner(address newOwner) onlyOwner {
+        var oldOwner = owner;
         owner = newOwner;
+        OwnerChanged(oldOwner, newOwner);
     }
 
     // Kill the contract
     function destroy() onlyOwner {
         suicide(owner);
     }
-
-    // TODO: publish events
 
     // TODO: batch adding
     // function addAdmins(address[] admins) onlyOwner
