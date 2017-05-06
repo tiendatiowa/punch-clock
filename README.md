@@ -31,15 +31,15 @@ Running `pc.addMember("0xf3da29ea01acbb909640bbb34dc90fbda3770d08")` cost 68,879
 
 * Punch in and out a member
   
-Running `pc.punchIn("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196679)` cost 69,406 gas (0.00138812 ETH, or $0.06)
+Running `pc.punchIn("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196679)` cost 65,923 gas (0.00131846 ETH, or $0.05)
   
-Running `pc.punchOut("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196680)` cost 70,487 gas (0.00140974 ETH, or $0.06)
+Running `pc.punchOut("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196680)` cost 47,253 gas (0.00094506 ETH, or $0.04)
 
 * At a summary: a company has 10 admins, 100 employees, working 26 days a month, each person punch in and out once a day, then the estimated cost:
     * to setup a contract:
         $0.83 (contract creation) + 10 * $0.09 (add one admin) + 100 * $0.06 (add one member) = $7.73
     * to punch in and out each month:
-        110 * ($0.06 + $0.06) * 26 = $343.2
+        110 * ($0.05 + $0.04) * 26 = $257.4
     * retrieving the data (i.e. invoking getter methods) is free
 
 # Development
@@ -57,7 +57,7 @@ Running `pc.punchOut("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196680)` 
         ``` 
     * Deploy to test network
         ```
-        $ truffle migrate
+        $ truffle migrate --reset
         ```
     * Test the code in truffle console
         ```
