@@ -18,6 +18,10 @@ project/plugins/project/
 
 # truffle
 build/
+node_modules/
 
 #vim
 *.swp
+
+#Mac OS
+.DS_Store

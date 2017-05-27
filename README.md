@@ -82,5 +82,16 @@ Running `pc.punchOut("0xf3da29ea01acbb909640bbb34dc90fbda3770d08", 1490196680)` 
         $ cards[0][1] == 1490196679 // return true
         ```
 
+# Web interface
+* Install truffle default builder using this command:
+    ```
+    npm install truffle-default-builder --save
+    ```
+* Execute:
+    ```
+    truffle serve
+    ```
+* Open web browser and type: "localhost:8080". You'll see a basic web interfact that allows you to execute all functionalities of this contract.
+
 ## License
 Code released under the [Apache License 2.0](https://github.com/tiendatiowa/punch-clock/blob/master/LICENSE).
