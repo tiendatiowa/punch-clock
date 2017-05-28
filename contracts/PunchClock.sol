@@ -189,6 +189,9 @@ contract PunchClock {
         if (members[member] == true) {
             members[member] = false;
         }
+        if (admins[member] == true) {
+            admins[member] = false;
+        }
         MemberRemoved(member);
     }
 
