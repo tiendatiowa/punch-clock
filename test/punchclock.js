@@ -165,6 +165,50 @@ contract('PunchClock', function(accounts) {
           assert.equal(isAdmin, false, "The third account must not be an admin anymore");
       })
   });
+  it("getAllAdmins() after removeAdmin()", function() {
+      var pc;
+      return PunchClock.deployed().then(function(instance) {
+          pc = instance;
+      }).then(function() {
+          pc.addAdmin(accounts[2]);
+      }).then(function() {
+          return pc.isAdmin(accounts[2]);
+      }).then(function(isAdmin) {
+          assert.equal(isAdmin, true, "The third account must be an admin");
+      }).then(function() {
+          pc.removeMember(accounts[2]);
+      }).then(function() {
+          return pc.isAdmin(accounts[2]);
+      }).then(function(isAdmin) {
+          assert.equal(isAdmin, false, "The third account must not be an admin anymore");
+      }).then(function() {
+          return pc.getAllAdmins();
+      }).then(function(admins) {
+          // The returned array will look somewhat like this:
+          // [ '0x58678dcf1ce3d0744d1a24c3146b7d3cbddbd5ed',
+          //   '0x0000000000000000000000000000000000000000',
+          //   '0x0000000000000000000000000000000000000000',
+          //   '0x0000000000000000000000000000000000000000' ]
+          // All of the "0x000..00" represent remove admins
+          var validAdmins = 0;
+          for (var i = 0; i < admins.length; i++) {
+              if (admins[i] != "0x0000000000000000000000000000000000000000") {
+                  validAdmins++;
+              }
+          }
+          assert.equal(validAdmins, 1, "There should be only one admin");
+      }).then(function() {
+          return pc.getAllMembers();
+      }).then(function(members) {
+          var validMembers = 0;
+          for (var i = 0; i < members.length; i++) {
+              if (members[i] != "0x0000000000000000000000000000000000000000") {
+                  validMembers++;
+              }
+          }
+          assert.equal(validMembers, 1, "There should be only one member");
+      })
+  });
   it("change owner", function(){
       var pc;
       return PunchClock.new().then(function(instance) {

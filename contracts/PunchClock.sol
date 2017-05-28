@@ -107,8 +107,13 @@ contract PunchClock {
     // Return all members in the contract. Only admins can perform this task.
     function getAllMembers() onlyAdmins constant returns(address[]) {
         address[] memory allMembers = new address[](totalNumberOfMembers);
+        uint64 j = 0;
         for (uint64 i = 0; i < totalNumberOfMembers; i++) {
-            allMembers[i] = membersByIndex[i];
+            address member = membersByIndex[i];
+            if (members[member] == true) {
+                allMembers[j] = member;
+                j++;
+            }
         }
         return allMembers;
     }
@@ -116,8 +121,13 @@ contract PunchClock {
     // Return all admins in the contract. Only owner can perform this task.
     function getAllAdmins() onlyOwner constant returns(address[]) {
         address[] memory allAdmins = new address[](totalNumberOfAdmins);
+        uint64 j = 0;
         for (uint64 i = 0; i < totalNumberOfAdmins; i++) {
-            allAdmins[i] = adminsByIndex[i];
+            address admin = adminsByIndex[i];
+            if (admins[admin] == true) {
+                allAdmins[j] = admin;
+                j++;
+            } 
         }
         return allAdmins;
     }
