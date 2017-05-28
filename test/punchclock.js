@@ -155,6 +155,10 @@ contract('PunchClock', function(accounts) {
           return pc.getOwner();
       }).then(function(owner) {
           assert.equal(owner, accounts[1], "the owner should be the second account");
+      }).then(function() {
+          return pc.isAdmin(accounts[1]);
+      }).then(function(isAdmin) {
+          assert.equal(isAdmin, true, "the new owner should be an admin");
       })
   });
   it("destroy() should kill the contract", function(){

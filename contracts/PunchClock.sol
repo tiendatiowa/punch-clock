@@ -40,12 +40,7 @@ contract PunchClock {
     // Constructor, create a new punch clock and assign the creator as the owner of the punch clock
     function PunchClock() {
         owner = msg.sender;
-        admins[owner] = true;
-        adminsByIndex[0] = owner;
-        totalNumberOfAdmins = 1;
-        members[owner] = true;
-        membersByIndex[0] = owner;
-        totalNumberOfMembers = 1;
+        addAdmin(owner);
     }
 
     modifier onlyOwner() {
@@ -209,8 +204,10 @@ contract PunchClock {
 
     // Change the owner to another person. Only owner can perform this task.
     function changeOwner(address newOwner) onlyOwner {
+        addAdmin(newOwner);
         var oldOwner = owner;
         owner = newOwner;
+
         OwnerChanged(oldOwner, newOwner);
     }
 
